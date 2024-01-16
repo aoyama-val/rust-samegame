@@ -1,4 +1,5 @@
 use sdl2::event::Event;
+use sdl2::gfx::primitives::DrawRenderer;
 use sdl2::keyboard::Keycode;
 use sdl2::mouse::MouseButton;
 use sdl2::pixels::Color;
@@ -98,7 +99,7 @@ pub fn main() -> Result<(), String> {
                 Event::MouseButtonDown { x, y, .. } => {
                     let cell_x = (x as usize) / CELL_SIZE as usize;
                     let cell_y = (y as usize) / CELL_SIZE as usize;
-                    println!("{} {} {} {}", x, y, cell_x, cell_y);
+                    println!("Click {} {} {} {}", x, y, cell_x, cell_y);
                     if game.is_valid_cell(cell_x, cell_y) {
                         command = Command::Click(cell_x, cell_y);
                     }
@@ -180,6 +181,9 @@ fn render(
     canvas.set_draw_color(Color::RGB(0, 0, 0));
     canvas.clear();
 
+    canvas.set_draw_color(Color::RGB(128, 128, 128));
+    canvas.fill_rect(Rect::new(0, SCREEN_HEIGHT - 82, SCREEN_WIDTH as u32, 82))?;
+
     let font = resources.fonts.get_mut("boxfont").unwrap();
 
     // render board
@@ -194,13 +198,19 @@ fn render(
                     4 => Color::RGB(255, 128, 255), // purple
                     _ => panic!(),
                 };
-                canvas.set_draw_color(color);
-                canvas.fill_rect(Rect::new(
-                    x as i32 * CELL_SIZE,
-                    y as i32 * CELL_SIZE,
-                    CELL_SIZE as u32,
-                    CELL_SIZE as u32,
-                ))?;
+                // canvas.set_draw_color(color);
+                // canvas.fill_rect(Rect::new(
+                //     x as i32 * CELL_SIZE,
+                //     y as i32 * CELL_SIZE,
+                //     CELL_SIZE as u32,
+                //     CELL_SIZE as u32,
+                // ))?;
+                canvas.filled_circle(
+                    (x as i32 * CELL_SIZE + CELL_SIZE / 2) as i16,
+                    (y as i32 * CELL_SIZE + CELL_SIZE / 2) as i16,
+                    (CELL_SIZE / 2 - 3) as i16,
+                    color,
+                )?;
             }
         }
     }
