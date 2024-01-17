@@ -1,7 +1,5 @@
 use sdl2::event::Event;
-use sdl2::gfx::primitives::DrawRenderer;
 use sdl2::keyboard::Keycode;
-use sdl2::mouse::MouseButton;
 use sdl2::pixels::Color;
 use sdl2::rect::Rect;
 use sdl2::render::{BlendMode, Canvas, Texture, TextureCreator};
@@ -190,27 +188,17 @@ fn render(
     for y in 0..BOARD_H as usize {
         for x in 0..BOARD_W as usize {
             if game.board[y][x].exist {
-                let color = match game.board[y][x].color {
-                    0 => Color::RGB(255, 128, 128), // red
-                    1 => Color::RGB(255, 255, 128), // yellow
-                    2 => Color::RGB(128, 255, 128), // green
-                    3 => Color::RGB(128, 128, 255), // blue
-                    4 => Color::RGB(255, 128, 255), // purple
-                    _ => panic!(),
-                };
-                // canvas.set_draw_color(color);
-                // canvas.fill_rect(Rect::new(
-                //     x as i32 * CELL_SIZE,
-                //     y as i32 * CELL_SIZE,
-                //     CELL_SIZE as u32,
-                //     CELL_SIZE as u32,
-                // ))?;
-                canvas.filled_circle(
-                    (x as i32 * CELL_SIZE + CELL_SIZE / 2) as i16,
-                    (y as i32 * CELL_SIZE + CELL_SIZE / 2) as i16,
-                    (CELL_SIZE / 2 - 3) as i16,
-                    color,
-                )?;
+                let image = resources
+                    .images
+                    .get(&format!("color{}.bmp", game.board[y][x].color))
+                    .unwrap();
+                canvas
+                    .copy(
+                        &image.texture,
+                        Rect::new(0, 0, image.w, image.h),
+                        Rect::new(x as i32 * CELL_SIZE, y as i32 * CELL_SIZE, image.w, image.h),
+                    )
+                    .unwrap();
             }
         }
     }
