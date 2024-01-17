@@ -24,6 +24,7 @@ pub struct Cell {
 pub struct Game {
     pub is_over: bool,
     pub is_clear: bool,
+    pub is_debug: bool,
     pub rng: StdRng,
     pub score: i32,
     pub hover_score: i32,
@@ -47,6 +48,7 @@ impl Game {
         let mut game = Game {
             is_over: false,
             is_clear: false,
+            is_debug: true,
             rng: rng,
             board: [[Cell::default(); BOARD_W as usize]; BOARD_H as usize],
             score: 0,
@@ -68,6 +70,10 @@ impl Game {
 
         game.update_components();
 
+        if game.is_debug {
+            game.print();
+        }
+
         game
     }
 
@@ -87,7 +93,24 @@ impl Game {
         }
     }
 
+    pub fn print(&self) {
+        for y in 0..BOARD_H as usize {
+            for x in 0..BOARD_W as usize {
+                if self.board[y][x].exist {
+                    print!("{} ", self.board[y][x].color);
+                } else {
+                    print!("  ");
+                }
+            }
+            println!("");
+        }
+    }
+
     pub fn click(&mut self, x: usize, y: usize) {
+        if self.is_debug {
+            println!("Click {} {}", x, y);
+        }
+
         let component_id = self.board[y][x].component_id;
         let connected_count = *self.connected_counts.get(&component_id).unwrap();
         if connected_count <= 1 {
@@ -139,6 +162,10 @@ impl Game {
         self.update_components();
 
         self.score += score;
+
+        if self.is_debug {
+            self.print();
+        }
     }
 
     pub fn is_empty_column(&self, x: usize) -> bool {
