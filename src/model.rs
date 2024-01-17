@@ -1,4 +1,4 @@
-use std::{collections::HashMap, hash::Hash, time};
+use std::{collections::HashMap, time};
 
 use rand::{rngs::StdRng, Rng, SeedableRng};
 
@@ -19,7 +19,6 @@ pub struct Cell {
     pub exist: bool,
     pub color: i32,
     pub component_id: i32,
-    // pub connected_count: i32,
 }
 
 pub struct Game {
@@ -63,7 +62,6 @@ impl Game {
                     exist: true,
                     color: game.rng.gen_range(0..COLORS_COUNT),
                     component_id: -1,
-                    // connected_count: 0,
                 }
             }
         }

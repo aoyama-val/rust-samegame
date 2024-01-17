@@ -98,7 +98,6 @@ pub fn main() -> Result<(), String> {
                 Event::MouseButtonDown { x, y, .. } => {
                     let cell_x = (x as usize) / CELL_SIZE as usize;
                     let cell_y = (y as usize) / CELL_SIZE as usize;
-                    println!("Click {} {} {} {}", x, y, cell_x, cell_y);
                     if game.is_valid_cell(cell_x, cell_y) {
                         command = Command::Click(cell_x, cell_y);
                     }
