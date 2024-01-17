@@ -14,7 +14,8 @@ use crate::model::*;
 pub const WINDOW_TITLE: &str = "rust-samegame";
 pub const CELL_SIZE: i32 = 40;
 pub const SCREEN_WIDTH: i32 = BOARD_W * CELL_SIZE;
-pub const SCREEN_HEIGHT: i32 = BOARD_H * CELL_SIZE + 82;
+pub const SCREEN_HEIGHT: i32 = BOARD_H * CELL_SIZE + PADDING_BOTTOM;
+pub const PADDING_BOTTOM: i32 = 115;
 
 struct Image<'a> {
     texture: Texture<'a>,
@@ -180,7 +181,12 @@ fn render(
     canvas.clear();
 
     canvas.set_draw_color(Color::RGB(128, 128, 128));
-    canvas.fill_rect(Rect::new(0, SCREEN_HEIGHT - 82, SCREEN_WIDTH as u32, 82))?;
+    canvas.fill_rect(Rect::new(
+        0,
+        SCREEN_HEIGHT - PADDING_BOTTOM,
+        SCREEN_WIDTH as u32,
+        PADDING_BOTTOM as u32,
+    ))?;
 
     let font = resources.fonts.get_mut("boxfont").unwrap();
 
@@ -206,7 +212,7 @@ fn render(
     render_font(
         canvas,
         font,
-        format!("POINTING: {:5}", game.hover_score).to_string(),
+        format!("CONNECTED: {:4}", game.hover_connected_count).to_string(),
         290,
         405,
         Color::RGBA(255, 255, 255, 255),
@@ -216,9 +222,19 @@ fn render(
     render_font(
         canvas,
         font,
-        format!("SCORE: {:8}", game.score).to_string(),
+        format!("POINT: {:8}", game.hover_score).to_string(),
         290,
         438,
+        Color::RGBA(255, 255, 255, 255),
+        false,
+    );
+
+    render_font(
+        canvas,
+        font,
+        format!("SCORE: {:8}", game.score).to_string(),
+        290,
+        471,
         Color::RGBA(255, 255, 255, 255),
         false,
     );
