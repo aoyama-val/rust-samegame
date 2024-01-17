@@ -110,6 +110,12 @@ impl Game {
         if self.is_debug {
             println!("Click {} {}", x, y);
         }
+        if !self.is_valid_coord(x, y) {
+            return;
+        }
+        if !self.board[y][x].exist {
+            return;
+        }
 
         let component_id = self.board[y][x].component_id;
         let connected_count = *self.connected_counts.get(&component_id).unwrap();
@@ -163,6 +169,8 @@ impl Game {
 
         self.score += score;
 
+        self.check_gameover();
+
         if self.is_debug {
             self.print();
         }
@@ -191,6 +199,9 @@ impl Game {
     }
 
     pub fn hover(&mut self, x: usize, y: usize) {
+        if !self.is_valid_coord(x, y) {
+            return;
+        }
         if !self.board[y][x].exist {
             self.hover_connected_count = 0;
             self.hover_score = -1;
@@ -222,7 +233,7 @@ impl Game {
         }
     }
 
-    pub fn is_valid_cell(&self, x: usize, y: usize) -> bool {
+    pub fn is_valid_coord(&self, x: usize, y: usize) -> bool {
         if x < BOARD_W as usize && y < BOARD_H as usize {
             true
         } else {
@@ -277,6 +288,28 @@ impl Game {
         }
         if y + 1 < BOARD_H as usize && self.board[y + 1][x].color == color {
             self.set_component_id(x, y + 1, component_id);
+        }
+    }
+
+    pub fn check_gameover(&mut self) {
+        self.is_clear = true;
+        for y in 0..BOARD_H as usize {
+            for x in 0..BOARD_W as usize {
+                if self.board[y][x].exist {
+                    self.is_clear = false;
+                    break;
+                }
+            }
+        }
+        if self.is_clear {
+            return;
+        }
+
+        self.is_over = true;
+        for (component_id, connected_count) in &self.connected_counts {
+            if *connected_count >= 2 {
+                self.is_over = false;
+            }
         }
     }
 }

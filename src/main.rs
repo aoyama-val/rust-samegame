@@ -91,16 +91,12 @@ pub fn main() -> Result<(), String> {
                 Event::MouseMotion { x, y, .. } => {
                     let cell_x = (x as usize) / CELL_SIZE as usize;
                     let cell_y = (y as usize) / CELL_SIZE as usize;
-                    if game.is_valid_cell(cell_x, cell_y) {
-                        command = Command::Hover(cell_x, cell_y);
-                    }
+                    command = Command::Hover(cell_x, cell_y);
                 }
                 Event::MouseButtonDown { x, y, .. } => {
                     let cell_x = (x as usize) / CELL_SIZE as usize;
                     let cell_y = (y as usize) / CELL_SIZE as usize;
-                    if game.is_valid_cell(cell_x, cell_y) {
-                        command = Command::Click(cell_x, cell_y);
-                    }
+                    command = Command::Click(cell_x, cell_y);
                 }
                 _ => {}
             }
