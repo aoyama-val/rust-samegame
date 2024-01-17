@@ -125,10 +125,44 @@ impl Game {
         }
 
         // 左に寄せる
+        let mut x3 = 0;
+        for x2 in 0..BOARD_W as usize {
+            while x3 < BOARD_W as usize && self.is_empty_column(x3) {
+                x3 += 1;
+            }
+            if x3 < BOARD_W as usize {
+                self.copy_column(x3, x2);
+                x3 += 1;
+            } else {
+                self.set_column_not_exist(x2);
+            }
+        }
 
         self.update_components();
 
         self.score += score;
+    }
+
+    pub fn is_empty_column(&self, x: usize) -> bool {
+        for y2 in (0..BOARD_H as usize).rev() {
+            if self.board[y2][x].exist {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    pub fn copy_column(&mut self, src_x: usize, dest_x: usize) {
+        for y in 0..BOARD_H as usize {
+            self.board[y][dest_x] = self.board[y][src_x];
+        }
+    }
+
+    // 1列まるごと空にする
+    pub fn set_column_not_exist(&mut self, x: usize) {
+        for y in 0..BOARD_H as usize {
+            self.board[y][x].exist = false;
+        }
     }
 
     pub fn hover(&mut self, x: usize, y: usize) {
