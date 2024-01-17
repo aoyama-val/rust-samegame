@@ -107,6 +107,27 @@ impl Game {
             }
         }
 
+        // 下に落とす
+        for x2 in 0..BOARD_W as usize {
+            let mut y3 = BOARD_H - 1;
+            for y2 in (0..BOARD_H as usize).rev() {
+                // 上方に存在するマスがあるか探す
+                while y3 >= 0 && !self.board[y3 as usize][x2].exist {
+                    y3 -= 1;
+                }
+                if y3 >= 0 {
+                    self.board[y2][x2] = self.board[y3 as usize][x2]; // 存在するマスがあったらそれを落とす
+                    y3 -= 1; // 次はその1個上から探す
+                } else {
+                    self.board[y2][x2].exist = false;
+                }
+            }
+        }
+
+        // 左に寄せる
+
+        self.update_components();
+
         self.score += score;
     }
 
@@ -172,6 +193,9 @@ impl Game {
         if self.board[y][x].component_id != -1 {
             return;
         }
+        if !self.board[y][x].exist {
+            return;
+        }
 
         self.board[y][x].component_id = component_id;
 
@@ -183,22 +207,16 @@ impl Game {
         }
 
         let color = self.board[y][x].color;
-        if x >= 1 && self.board[y][x - 1].exist && self.board[y][x - 1].color == color {
+        if x >= 1 && self.board[y][x - 1].color == color {
             self.set_component_id(x - 1, y, component_id);
         }
-        if x + 1 < BOARD_W as usize
-            && self.board[y][x + 1].exist
-            && self.board[y][x + 1].color == color
-        {
+        if x + 1 < BOARD_W as usize && self.board[y][x + 1].color == color {
             self.set_component_id(x + 1, y, component_id);
         }
-        if y >= 1 && self.board[y - 1][x].exist && self.board[y - 1][x].color == color {
+        if y >= 1 && self.board[y - 1][x].color == color {
             self.set_component_id(x, y - 1, component_id);
         }
-        if y + 1 < BOARD_H as usize
-            && self.board[y + 1][x].exist
-            && self.board[y + 1][x].color == color
-        {
+        if y + 1 < BOARD_H as usize && self.board[y + 1][x].color == color {
             self.set_component_id(x, y + 1, component_id);
         }
     }
