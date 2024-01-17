@@ -31,6 +31,7 @@ pub struct Game {
     pub hover_connected_count: i32,
     pub board: [[Cell; BOARD_W as usize]; BOARD_H as usize],
     pub connected_counts: HashMap<i32, i32>,
+    pub hover_component_id: i32,
 }
 
 impl Game {
@@ -53,6 +54,7 @@ impl Game {
             hover_score: 0,
             hover_connected_count: 0,
             connected_counts: HashMap::new(),
+            hover_component_id: -1,
         };
 
         for y in 0..BOARD_H as usize {
@@ -87,16 +89,44 @@ impl Game {
         }
     }
 
-    pub fn click(&mut self, x: usize, y: usize) {}
+    pub fn click(&mut self, x: usize, y: usize) {
+        let component_id = self.board[y][x].component_id;
+        let connected_count = *self.connected_counts.get(&component_id).unwrap();
+        if connected_count <= 1 {
+            return;
+        }
+
+        let score = self.calc_point(x, y);
+
+        // 繋がっている石を全部消す
+        for y2 in 0..BOARD_H as usize {
+            for x2 in 0..BOARD_W as usize {
+                if self.board[y2][x2].component_id == component_id {
+                    self.board[y2][x2].exist = false;
+                }
+            }
+        }
+
+        self.score += score;
+    }
+
     pub fn hover(&mut self, x: usize, y: usize) {
+        if !self.board[y][x].exist {
+            self.hover_connected_count = 0;
+            self.hover_score = -1;
+            self.hover_component_id = -1;
+            return;
+        }
         self.hover_connected_count = *self
             .connected_counts
             .get(&self.board[y][x].component_id)
             .unwrap();
-        self.hover_score = self.calc_score(x, y);
+        self.hover_score = self.calc_point(x, y);
+
+        self.hover_component_id = self.board[y][x].component_id;
     }
 
-    pub fn calc_score(&mut self, x: usize, y: usize) -> i32 {
+    pub fn calc_point(&mut self, x: usize, y: usize) -> i32 {
         if self.board[y][x].exist {
             let c = self
                 .connected_counts

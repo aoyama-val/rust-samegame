@@ -1,7 +1,7 @@
 #!/bin/bash
 
-convert -size 40x40 xc:"#000000" -fill "#ff8080" -draw "circle 19.5,19.5 3,19.5" color0.bmp 
-convert -size 40x40 xc:"#000000" -fill "#ffff80" -draw "circle 19.5,19.5 3,19.5" color1.bmp 
-convert -size 40x40 xc:"#000000" -fill "#80ff80" -draw "circle 19.5,19.5 3,19.5" color2.bmp 
-convert -size 40x40 xc:"#000000" -fill "#8080ff" -draw "circle 19.5,19.5 3,19.5" color3.bmp 
-convert -size 40x40 xc:"#000000" -fill "#ff80ff" -draw "circle 19.5,19.5 3,19.5" color4.bmp 
+convert -size 40x40 xc:"#00000000" -fill "#ff8080" -draw "circle 19.5,19.5 3,19.5" color0.bmp 
+convert -size 40x40 xc:"#00000000" -fill "#ffff80" -draw "circle 19.5,19.5 3,19.5" color1.bmp 
+convert -size 40x40 xc:"#00000000" -fill "#80ff80" -draw "circle 19.5,19.5 3,19.5" color2.bmp 
+convert -size 40x40 xc:"#00000000" -fill "#8080ff" -draw "circle 19.5,19.5 3,19.5" color3.bmp 
+convert -size 40x40 xc:"#00000000" -fill "#ff80ff" -draw "circle 19.5,19.5 3,19.5" color4.bmp 

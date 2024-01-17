@@ -198,6 +198,15 @@ fn render(
                     .images
                     .get(&format!("color{}.bmp", game.board[y][x].color))
                     .unwrap();
+                if game.board[y][x].component_id == game.hover_component_id {
+                    canvas.set_draw_color(Color::RGB(255, 255, 255));
+                    canvas.draw_rect(Rect::new(
+                        x as i32 * CELL_SIZE,
+                        y as i32 * CELL_SIZE,
+                        image.w + 1,
+                        image.h + 1,
+                    ))?;
+                }
                 canvas
                     .copy(
                         &image.texture,
@@ -212,7 +221,11 @@ fn render(
     render_font(
         canvas,
         font,
-        format!("CONNECTED: {:4}", game.hover_connected_count).to_string(),
+        if game.hover_connected_count >= 1 {
+            format!("CONNECTED: {:4}", game.hover_connected_count).to_string()
+        } else {
+            "CONNECTED:     ".to_string()
+        },
         290,
         405,
         Color::RGBA(255, 255, 255, 255),
@@ -222,7 +235,11 @@ fn render(
     render_font(
         canvas,
         font,
-        format!("POINT: {:8}", game.hover_score).to_string(),
+        if game.hover_connected_count >= 2 {
+            format!("POINT: {:8}", game.hover_score).to_string()
+        } else {
+            "POINT:         ".to_string()
+        },
         290,
         438,
         Color::RGBA(255, 255, 255, 255),
